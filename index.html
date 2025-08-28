@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Predict Podcast Listening Time</title>
+  <meta name="description" content="Capstone project predicting podcast listening time using tree-based machine learning models." />
+  <meta name="author" content="Aishwarya Singh" />
+  <meta property="og:title" content="Predict Podcast Listening Time" />
+  <meta property="og:description" content="Capstone project – modeling podcast listening time with Gradient Boosting, Random Forests and more." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/4/4f/Simple_podcast_icon.png" />
+  <meta name="theme-color" content="#4b1d72" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-alt: #f5f7fa;
+      --bg-accent: #ede7f6;
+      --text: #262626;
+      --text-soft: #555;
+      --border: #e0e0e0;
+      --primary: #6a1b9a;
+      --primary-accent: #8e24aa;
+      --code-bg: #282c34;
+      --code-text: #f8f8f2;
+      --success: #00897b;
+      --warn: #ef6c00;
+      --link: #512da8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #16161a;
+        --bg-alt: #1f1f25;
+        --bg-accent: #2a2340;
+        --text: #e6e6e6;
+        --text-soft: #aaa;
+        --border: #333;
+        --code-bg: #1e1e24;
+        --link: #b39ddb;
+      }
+    }
+    .dark {
+      --bg: #121214;
+      --bg-alt: #18181b;
+      --bg-accent: #231b33;
+      --text: #e5e5e5;
+      --text-soft: #9d9d9d;
+      --border: #2d2d32;
+      --code-bg: #1b1f26;
+      --link: #c3a8ff;
+    }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,sans-serif; background: var(--bg); color: var(--text); line-height:1.55; -webkit-font-smoothing: antialiased; }
+    h1,h2,h3,h4 { line-height:1.2; font-weight:600; letter-spacing:.5px; }
+    h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin:.2em 0 .4em; }
+    h2 { margin:2.5rem 0 1rem; position:relative; }
+    h2:before { content:""; position:absolute; left:-.75rem; top:50%; width:6px; height:60%; background: linear-gradient(var(--primary),var(--primary-accent)); border-radius:4px; transform:translateY(-50%); }
+    p { margin:.85em 0; }
+    a { color: var(--link); text-decoration:none; }
+    a:hover { text-decoration:underline; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    pre { background: var(--code-bg); color: var(--code-text); padding:1rem 1.1rem; border-radius:10px; overflow:auto; box-shadow:0 4px 12px -4px rgba(0,0,0,.35); }
+    code { background: var(--bg-accent); padding:.15em .45em; border-radius:6px; font-size:.9em; }
+    nav { position:sticky; top:0; backdrop-filter:blur(12px); background: rgba(255,255,255,.8); border-bottom:1px solid var(--border); z-index:50; display:flex; gap:1rem; align-items:center; padding:.6rem 1.25rem; } 
+    .dark nav { background: rgba(18,18,20,.8); }
+    nav a.brand { font-weight:600; letter-spacing:.5px; color: var(--primary); }
+    nav .links { display:flex; gap:1rem; flex-wrap:wrap; font-size:.9rem; }
+    nav .links a { padding:.35rem .65rem; border-radius:6px; font-weight:500; color: var(--text-soft); }
+    nav .links a:hover { background: var(--bg-accent); color: var(--text); text-decoration:none; }
+    .container { width:min(1180px, 100%); margin:0 auto; padding:0 1.25rem 3rem; }
+    .hero { text-align:center; padding:4.5rem 0 2.5rem; background: radial-gradient(circle at 30% 30%, var(--bg-accent), transparent 70%); }
+    .tagline { font-size:1.15rem; color: var(--text-soft); max-width:760px; margin:0 auto 1.5rem; }
+    .badges { display:flex; gap:.6rem; justify-content:center; flex-wrap:wrap; margin:1.2rem 0 0; }
+    .badge { background: var(--primary); color:#fff; padding:.4rem .75rem; font-size:.7rem; text-transform:uppercase; letter-spacing:1px; border-radius:100px; font-weight:600; box-shadow:0 4px 10px -4px rgba(0,0,0,.35); }
+    .grid { display:grid; gap:1.25rem; }
+    .grid.cols-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    table { width:100%; border-collapse:collapse; margin:1rem 0 1.5rem; font-size:.95rem; }
+    table th, table td { border:1px solid var(--border); padding:.55rem .7rem; text-align:left; vertical-align:top; }
+    table th { background: var(--bg-accent); font-weight:600; }
+    .card { background: var(--bg-alt); border:1px solid var(--border); padding:1.1rem 1rem 1.15rem; border-radius:14px; position:relative; overflow:hidden; }
+    .card:before { content:""; position:absolute; inset:0; background: linear-gradient(135deg,transparent 40%,rgba(255,255,255,.06)); pointer-events:none; }
+    .card h3 { margin-top:0; font-size:1.05rem; letter-spacing:.5px; }
+    .metric-box { background: var(--bg-accent); padding:1rem 1.25rem; border:1px solid var(--border); border-radius:12px; box-shadow:0 3px 10px -5px rgba(0,0,0,.25); }
+    .inline-code { background: var(--code-bg); color: var(--code-text); padding:.25rem .5rem; border-radius:6px; font-size:.8rem; }
+    .hl { color: var(--primary-accent); font-weight:600; }
+    details { background: var(--bg-alt); border:1px solid var(--border); padding:.8rem 1rem 1rem; border-radius:10px; margin:1rem 0; }
+    details summary { cursor:pointer; font-weight:600; }
+    .footer { margin-top:4rem; padding:2.5rem 0 3rem; text-align:center; font-size:.8rem; color: var(--text-soft); border-top:1px solid var(--border); }
+    .note { font-size:.85rem; color: var(--text-soft); }
+    .flex-row { display:flex; gap:1rem; flex-wrap:wrap; align-items:flex-start; }
+    .chip { background: var(--bg-accent); color: var(--text-soft); padding:.35rem .7rem; border-radius:999px; font-size:.7rem; letter-spacing:.5px; font-weight:600; }
+    button.toggle { margin-left:auto; background: var(--bg-accent); color: var(--text); border:1px solid var(--border); padding:.45rem .8rem; border-radius:8px; font-size:.8rem; cursor:pointer; display:flex; gap:.4rem; align-items:center; }
+    button.toggle:hover { background: var(--primary); color:#fff; }
+    .anchor-link { opacity:0; margin-left:.35rem; font-size:.8rem; }
+    h2:hover .anchor-link { opacity:1; }
+    blockquote { margin:1rem 0; padding:.85rem 1.1rem; border-left:6px solid var(--primary); background: var(--bg-alt); border-radius:0 10px 10px 0; font-size:.93rem; }
+  .gradient-text { background:linear-gradient(90deg,var(--primary) 10%, var(--primary-accent)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .success { color: var(--success); }
+    .warn { color: var(--warn); }
+    /* Scrollbar (webkit) */
+    ::-webkit-scrollbar { width:10px; height:10px; }
+    ::-webkit-scrollbar-track { background: var(--bg-alt); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius:8px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--primary-accent); }
+  </style>
+  <!-- MathJax for LaTeX rendering -->
+  <script>
+    window.MathJax = { tex: { inlineMath: [["$","$"],["\\(","\\)"]], displayMath: [["$$","$$"],["\\[","\\]"]] }, svg: { fontCache: 'global' } };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <nav>
+    <a class="brand" href="#top">🎙️ Podcast RMSE</a>
+    <div class="links">
+      <a href="#problem">Problem</a>
+      <a href="#dataset">Dataset</a>
+      <a href="#approach">Approach</a>
+      <a href="#insights">Insights</a>
+      <a href="#metric">Metric</a>
+      <a href="#stack">Tech</a>
+      <a href="#quickstart">Quick Start</a>
+      <a href="#enhancements">Enhancements</a>
+      <a href="#acknowledgements">Thanks</a>
+    </div>
+    <button class="toggle" id="themeToggle" aria-label="Toggle dark mode">🌙 <span>Dark</span></button>
+  </nav>
+  <header id="top" class="hero container">
+    <h1 class="gradient-text">Predict Podcast Listening Time</h1>
+    <p class="tagline">Capstone project exploring machine learning methods (Decision Trees, Random Forest, Histogram Gradient Boosting) to forecast <strong>per‑episode listener minutes</strong> using structured podcast metadata.</p>
+    <div class="badges">
+      <span class="badge">Data Analytics</span>
+      <span class="badge">Scikit-Learn</span>
+      <span class="badge">Regression</span>
+      <span class="badge">RMSE Metric</span>
+    </div>
+    <p style="margin-top:1.2rem; font-size:.9rem; color:var(--text-soft);">Author: <strong>Aishwarya Singh</strong> • Professional Certificate in Data Analytics (Imperial College Business School)</p>
+  </header>
+
+  <main class="container">
+    <section id="problem">
+      <h2>🧠 Problem Statement<a class="anchor-link" href="#problem">#</a></h2>
+      <p>Estimate <code>Listening_Time_minutes</code> for each podcast episode. Reliable predictions help with:</p>
+      <ul>
+        <li>Ad inventory & revenue planning</li>
+        <li>Optimizing episode length & pacing</li>
+        <li>Audience retention strategy</li>
+        <li>Personalized surfacing & recommendations</li>
+      </ul>
+      <p>The competition scoring function is <strong>Root Mean Squared Error (RMSE)</strong>, emphasizing larger errors.</p>
+    </section>
+
+    <section id="dataset">
+      <h2>📂 Dataset<a class="anchor-link" href="#dataset">#</a></h2>
+      <table>
+        <thead><tr><th>File</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>podcast_train.csv</code></td><td>Training data with features + target <code>Listening_Time_minutes</code></td></tr>
+            <tr><td><code>podcast_test.csv</code></td><td>Test data; target withheld</td></tr>
+            <tr><td><code>podcast_sample_submission.csv</code></td><td>Required submission format reference</td></tr>
+            <tr><td><code>podcast.ipynb</code></td><td>End-to-end workflow (EDA → Modeling → Inference)</td></tr>
+        </tbody>
+      </table>
+      <blockquote><strong>Note:</strong> Data is synthetic, generated from a model trained on original source data; distributions are similar but not identical, enabling safe experimentation.</blockquote>
+      <p><strong>Source:</strong> Kaggle competition <em>Playground Series - Season 5, Episode 4</em> – <a href="https://www.kaggle.com/competitions/playground-series-s5e4/" target="_blank" rel="noopener">Predict Podcast Listening Time</a>.</p>
+    </section>
+
+    <section id="approach">
+      <h2>🔍 Approach Overview<a class="anchor-link" href="#approach">#</a></h2>
+      <ol>
+        <li><strong>Exploration & Profiling:</strong> Types, missingness, cardinality, drift checks.</li>
+        <li><strong>Feature Handling:</strong> Drop ID, median imputation (numeric), mode imputation (categorical), one‑hot encode.</li>
+        <li><strong>Baseline:</strong> Mean target predictor.</li>
+        <li><strong>Model Suite:</strong> Decision Tree (manual grid), Random Forest (focused grid), Histogram Gradient Boosting (iter/depth/lr sweep).</li>
+        <li><strong>Selection:</strong> Choose model minimizing validation RMSE.</li>
+        <li><strong>Retrain:</strong> Full training data with tuned parameters (disable early stopping for final fit).</li>
+        <li><strong>Inference:</strong> Column alignment + submission generation.</li>
+      </ol>
+    </section>
+
+    <section id="insights">
+      <h2>📊 Key Insights<a class="anchor-link" href="#insights">#</a></h2>
+      <div class="grid cols-2">
+        <div class="card"><h3>Target Shape</h3><p>Moderately dispersed; extreme values limited, enabling stable tree splits.</p></div>
+        <div class="card"><h3>Correlations</h3><p>A small cluster of numeric features dominate linear association strength; categoricals vary widely in cardinality.</p></div>
+        <div class="card"><h3>Drift Check</h3><p>Train vs test numeric distributions largely aligned after clipping extreme quantiles.</p></div>
+        <div class="card"><h3>Model Lift</h3><p><span class="hl">Histogram Gradient Boosting</span> more than halves baseline RMSE on validation split.</p></div>
+      </div>
+    </section>
+
+    <section id="metric">
+      <h2>📐 Evaluation Metric<a class="anchor-link" href="#metric">#</a></h2>
+      <div class="metric-box">
+        <p style="margin-top:0">RMSE penalizes large errors quadratically:</p>
+        <p style="font-size:1.05rem; text-align:center;">
+          $$\mathrm{RMSE} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2}$$
+        </p>
+        <p class="note">Lower is better. Validation used an 80/20 split (random_state=51) for comparability.</p>
+      </div>
+      <p><strong>Plain text:</strong> RMSE = sqrt( (1/N) * Σ (y_i - ŷ_i)^2 )</p>
+    </section>
+
+    <section id="stack">
+      <h2>🛠️ Tech Stack<a class="anchor-link" href="#stack">#</a></h2>
+      <div class="flex-row" style="margin-bottom:1rem;"> 
+        <span class="chip">Python ≥ 3.10</span>
+        <span class="chip">pandas</span>
+        <span class="chip">numpy</span>
+        <span class="chip">scikit-learn</span>
+        <span class="chip">seaborn</span>
+        <span class="chip">matplotlib</span>
+      </div>
+      <details open>
+        <summary>Requirements</summary>
+        <pre><code>pandas
+numpy
+matplotlib
+seaborn
+scikit-learn</code></pre>
+      </details>
+    </section>
+
+    <section id="quickstart">
+      <h2>▶️ Quick Start<a class="anchor-link" href="#quickstart">#</a></h2>
+      <ol>
+        <li>Clone repository & create virtual environment.</li>
+        <li>Install dependencies.</li>
+        <li>Open the notebook & run sequentially.</li>
+        <li>Locate generated <code>submission.csv</code>.</li>
+      </ol>
+      <pre><code class="language-bash">git clone https://github.com/aishwaryasingh51/Predict-Podcast-Listening-Time.git
+cd Predict-Podcast-Listening-Time
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt  # optional if file created
+</code></pre>
+      <p class="note">For a production script: extract preprocessing + model fit into <code>src/</code> modules (see suggested structure).</p>
+    </section>
+
+    <section id="enhancements">
+      <h2>🧪 Potential Enhancements<a class="anchor-link" href="#enhancements">#</a></h2>
+      <table>
+        <thead><tr><th>Category</th><th>Ideas</th></tr></thead>
+        <tbody>
+          <tr><td>Feature Engineering</td><td>Ratios, interactions, target encoding (CV), temporal derivations.</td></tr>
+          <tr><td>Modeling</td><td>LightGBM / XGBoost, CatBoost for native categoricals, blending / stacking.</td></tr>
+          <tr><td>Validation</td><td>K-fold CV, stratify by binned target, temporal splits if time fields present.</td></tr>
+          <tr><td>Regularization</td><td>Monotonic constraints (domain-driven), SHAP-based feature pruning.</td></tr>
+          <tr><td>Deployment</td><td>Serialize model (joblib) + FastAPI inference endpoint + CI test harness.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="structure">
+      <h2>📁 Suggested Structure<a class="anchor-link" href="#structure">#</a></h2>
+      <pre><code>.
+├── data/                 # (Move CSVs here; optionally .gitignore if restricted)
+├── notebooks/
+│   └── podcast.ipynb
+├── src/
+│   ├── preprocess.py     # Cleaning / encoding pipeline
+│   ├── train.py          # Model training entrypoint
+│   └── infer.py          # Batch prediction
+├── requirements.txt
+└── README.md</code></pre>
+    </section>
+
+    <section id="reusability">
+      <h2>🧭 Reusability Contract<a class="anchor-link" href="#reusability">#</a></h2>
+      <ul>
+        <li><strong>Inputs:</strong> DataFrame with same feature columns (excluding <code>id</code>, target).</li>
+        <li><strong>Outputs:</strong> Array[float] predictions for <code>Listening_Time_minutes</code>.</li>
+        <li><strong>Assumptions:</strong> Missing handling identical to training (median/mode).</li>
+        <li><strong>Failure Modes:</strong> Missing columns; unseen categories (handled via zeroed OHE columns).</li>
+      </ul>
+    </section>
+
+    <section id="reproducibility">
+      <h2>🔒 Reproducibility Notes<a class="anchor-link" href="#reproducibility">#</a></h2>
+      <ul>
+        <li>Deterministic splits & models via <code>random_state=51</code>.</li>
+        <li>One source of truth for imputers (train medians/modes).</li>
+        <li>Version pinning recommended for published benchmarks.</li>
+      </ul>
+    </section>
+
+    <section id="acknowledgements">
+      <h2>🙌 Acknowledgements<a class="anchor-link" href="#acknowledgements">#</a></h2>
+      <ul>
+        <li>Imperial College Business School & <strong>Emeritus</strong> – Programme structure & academic guidance.</li>
+        <li>Course Facilitators: <strong>Mr. Vikesh Koul</strong> and <strong>Mr. Aravind Reddy Dudipala</strong> for mentorship.</li>
+        <li>Fellow students & peer reviewers for collaboration and insightful feedback.</li>
+        <li>Open‑source maintainers (scikit-learn, pandas, numpy, seaborn, matplotlib).</li>
+        <li>Kaggle <em>Playground Series S5E4</em> organizers & contributors for the synthetic dataset.</li>
+      </ul>
+    </section>
+
+    <section id="license">
+      <h2>📜 License & Usage<a class="anchor-link" href="#license">#</a></h2>
+      <p>Dataset usage subject to the original competition terms. Project code is provided for educational & research purposes; attribution appreciated.</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> Predict Podcast Listening Time • Built with ❤️ for data-driven storytelling.</p>
+    <p>View the source repository on <a href="https://github.com/aishwaryasingh51/Predict-Podcast-Listening-Time" target="_blank" rel="noopener">GitHub</a>.</p>
+  </footer>
+
+  <script>
+    // Theme toggle logic
+    const root = document.documentElement;
+    const btn = document.getElementById('themeToggle');
+    function setMode(mode){
+      if(mode === 'dark'){ root.classList.add('dark'); btn.innerHTML='☀️ <span>Light</span>'; localStorage.setItem('theme','dark'); }
+      else { root.classList.remove('dark'); btn.innerHTML='🌙 <span>Dark</span>'; localStorage.setItem('theme','light'); }
+    }
+    const preferred = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches? 'dark':'light');
+    setMode(preferred);
+    btn.addEventListener('click',()=> setMode(root.classList.contains('dark')? 'light':'dark'));
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+    // Add anchor deep-link copy on click (optional enhancement)
+    document.querySelectorAll('h2').forEach(h => { h.addEventListener('click', () => { const id = h.id; if(id){ history.replaceState(null,'','#'+id); } }); });
+  </script>
+</body>
+</html>
