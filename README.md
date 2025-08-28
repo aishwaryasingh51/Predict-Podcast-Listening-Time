@@ -107,7 +107,9 @@ Failure Modes: Unexpected categorical levels (handled by zero columns post align
 Dataset usage subject to original competition terms (synthetic derivative). Code free for educational reuse—credit appreciated.
 
 ## 🙌 Acknowledgements
-- Imperial College Business School – Analytics Program guidance.  
+- Imperial College Business School & **Emeritus** – Programme structure & academic guidance.  
+- Course Facilitators: **Mr. Vikesh Koul** and **Mr. Aravind Reddy Dudipala** for mentorship and insightful feedback.  
+- Fellow students & peer reviewers for collaboration and idea exchange.  
 - Open-source ecosystem maintainers (scikit-learn, pandas, etc.).
 - Kaggle *Playground Series S5E4* competition organizers & contributors for the synthetic dataset.
 
