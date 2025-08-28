@@ -43,7 +43,7 @@ The project evaluates submissions using **Root Mean Squared Error (RMSE)**.
 6. **Final Training**: Retrained chosen model on full training data (early stopping disabled).  
 7. **Inference**: Align encoded test columns to train matrix; generate `submission.csv`.
 
-## 📊 Key Insights (from Notebook)
+## 📊 Key Insights
 - Target distribution moderately spread; tree ensembles benefit from depth control + leaf regularization.
 - A handful of numeric features exhibit strongest correlation with listening time; categorical effects are uneven (some high cardinality). 
 - Histogram Gradient Boosting substantially reduces RMSE vs baseline (more than 50% improvement in validation comparison chart).
