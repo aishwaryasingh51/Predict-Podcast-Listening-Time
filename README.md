@@ -26,6 +26,8 @@ The project evaluates submissions using **Root Mean Squared Error (RMSE)**.
 
 > Note: Data was synthetically generated from a model trained on an original podcast dataset; distributions are similar but not identical. This allows experimentation with domain adaptation ideas.
 
+**Source:** Derived from the Kaggle competition *Playground Series - Season 5, Episode 4* – Predict Podcast Listening Time: https://www.kaggle.com/competitions/playground-series-s5e4/
+
 ## 🔍 Approach Overview
 1. **Exploration & Profiling**: Structure, types, missingness, cardinality, target distribution, train vs test drift checks.  
 2. **Feature Handling**:  
@@ -107,6 +109,7 @@ Dataset usage subject to original competition terms (synthetic derivative). Code
 ## 🙌 Acknowledgements
 - Imperial College Business School – Analytics Program guidance.  
 - Open-source ecosystem maintainers (scikit-learn, pandas, etc.).
+- Kaggle *Playground Series S5E4* competition organizers & contributors for the synthetic dataset.
 
 ## 📧 Contact
 For questions or collaboration ideas, feel free to open an issue or discussion in the repository.
