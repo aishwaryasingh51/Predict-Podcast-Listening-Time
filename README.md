@@ -14,7 +14,7 @@ Given podcast episode metadata (content, engagement & production attributes), pr
 - Audience retention strategies  
 - Personalized recommendations
 
-The competition evaluates submissions using **Root Mean Squared Error (RMSE)**.
+The project evaluates submissions using **Root Mean Squared Error (RMSE)**.
 
 ## 📂 Dataset
 | File | Description |
