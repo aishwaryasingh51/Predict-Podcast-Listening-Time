@@ -82,10 +82,13 @@ Open `podcast.ipynb` and run cells in order OR run a lean inference script (you 
 4. Inspect head to verify formatting (`id,Listening_Time_minutes`).
 
 ## 📐 Evaluation Metric
-RMSE:  
+The competition optimizes **Root Mean Squared Error (RMSE)**:
+
 $$
-\textrm{RMSE} = \left( \frac{1}{N} \sum_{i=1}^{N} (y_i - \widehat{y}_i)^2 \right)^{\frac{1}{2}}
+\mathrm{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N} (y_i - \hat{y}_i)^2}
 $$
+
+Fallback (plain text): `RMSE = sqrt( (1/N) * Σ (y_i - ŷ_i)^2 )`
 
 Lower is better. All reported model comparisons reference the same validation split (80/20, fixed seed = 51).
 
