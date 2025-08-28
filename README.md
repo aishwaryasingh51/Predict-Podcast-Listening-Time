@@ -83,7 +83,9 @@ Open `podcast.ipynb` and run cells in order OR run a lean inference script (you 
 
 ## 📐 Evaluation Metric
 RMSE:  
-\( \text{RMSE} = \sqrt{ \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 } \)
+$$
+\textrm{RMSE} = \left( \frac{1}{N} \sum_{i=1}^{N} (y_i - \widehat{y}_i)^2 \right)^{\frac{1}{2}}
+$$
 
 Lower is better. All reported model comparisons reference the same validation split (80/20, fixed seed = 51).
 
