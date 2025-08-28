@@ -2,8 +2,7 @@
 
 # 🎙️ Predict Podcast Listening Time
 
-**Capstone Project - Professional Certificate in Data Analytics**
-**Imperial College Business School**  
+**Capstone Project - Professional Certificate in Data Analytics (Imperial College Business School)**  
 Author: *Aishwarya Singh*
 
 </div>
