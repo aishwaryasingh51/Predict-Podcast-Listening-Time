@@ -88,8 +88,6 @@ $$
 \mathrm{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N} (y_i - \hat{y}_i)^2}
 $$
 
-Fallback (plain text): `RMSE = sqrt( (1/N) * Σ (y_i - ŷ_i)^2 )`
-
 Lower is better. All reported model comparisons reference the same validation split (80/20, fixed seed = 51).
 
 ## 🧪 Potential Enhancements
