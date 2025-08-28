@@ -90,29 +90,6 @@ $$
 
 Lower is better. All reported model comparisons reference the same validation split (80/20, fixed seed = 51).
 
-## 🧪 Potential Enhancements
-| Category | Ideas |
-|----------|-------|
-| Feature Engineering | Ratios, interaction terms, target encoding (with CV), time-based derivations |
-| Modeling | LightGBM / XGBoost, CatBoost (handles categoricals natively), stacked blending |
-| Validation | K-fold CV, stratified by binned target, temporal split if time metadata exists |
-| Regularization | Monotonic constraints (if domain knowledge), SHAP-based pruning |
-| Deployment | Export fitted model via `pickle` / `joblib`; add API (FastAPI) endpoint |
-
-## 📁 Suggested Repository Structure (Future Refactor)
-```
-.
-├── data/                 # (Optionally move CSVs here; add to .gitignore if private)
-├── notebooks/
-│   └── podcast.ipynb
-├── src/
-│   ├── preprocess.py     # Reusable cleaning + encoding
-│   ├── train.py          # Training entrypoint
-│   └── infer.py          # Batch prediction
-├── requirements.txt
-└── README.md
-```
-
 ## 🧭 Reusability Contract (Model Inference)
 Inputs: DataFrame with same feature schema as training (excluding `id`, target).  
 Outputs: 1D array of predicted `Listening_Time_minutes` (float).  
