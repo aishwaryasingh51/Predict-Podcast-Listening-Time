@@ -84,7 +84,7 @@ Open `podcast.ipynb` and run cells in order OR run a lean inference script (you 
 4. Inspect head to verify formatting (`id,Listening_Time_minutes`).
 
 ## 📐 Evaluation Metric
-The competition optimizes **Root Mean Squared Error (RMSE)**:
+The project optimizes **Root Mean Squared Error (RMSE)**:
 
 $$
 \mathrm{RMSE} = \sqrt{\frac{1}{N}\sum_{i=1}^{N} (y_i - \hat{y}_i)^2}
