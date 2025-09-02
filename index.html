@@ -266,12 +266,12 @@
         <h2 class="section-title">Exploratory Data Analysis</h2>
         <p><strong>Preprocessing:</strong> The raw training file contained a mix of numbers such as counts and durations and categories such as genre, publication day and sentiment labels. We removed the identifier column since it does not help prediction, filled missing numeric values with the middle value of the distribution, and filled missing categorical values with the most common entry so that no rows were lost. Categorical fields were converted into model friendly indicator columns while keeping the structure consistent between training and validation splits. Because all models were tree based we did not need to standardise or scale values which keeps the pipeline simpler and faster to run.</p>
         <p><strong>Exploratory Analysis:</strong></p>
-        <p><em>Listening Time Distribution:</em> We reviewed basic distributions to check for extreme outliers, compared average listening time across key categories such as genre, publication day and sentiment, and inspected simple relationships for the most influential numeric fields.</p>
+  <p><strong>Listening Time Distribution:</strong> We reviewed basic distributions to check for extreme outliers, compared average listening time across key categories such as genre, publication day and sentiment, and inspected simple relationships for the most influential numeric fields.</p>
         <figure>
           <img src="img/listening_time_distribution.png" alt="Distribution of listening time in minutes" style="max-width:100%;height:auto;" />
           <figcaption>Figure: Listening Time Distribution</figcaption>
         </figure>
-        <p><em>Feature Collinearity:</em> We inspected simple relationships for the most influential numeric fields.</p>
+  <p><strong>Feature Collinearity:</strong> We inspected simple relationships for the most influential numeric fields.</p>
         <figure>
           <img src="img/listening_time_scatterplot.png" alt="Scatterplot of key numeric predictors versus listening time" style="max-width:100%;height:auto;" />
           <figcaption>Figure: Listening Time vs Episode Length Scatterplot</figcaption>
@@ -280,7 +280,7 @@
           <img src="img/listening_time_heatmap.png" alt="Correlation heatmap of engineered and raw numeric features" style="max-width:100%;height:auto;" />
           <figcaption>Figure: Feature Correlation Heatmap</figcaption>
         </figure>
-        <p><em>Train vs Test Dataset Comparison:</em> We also overlaid training and test distributions to confirm they were broadly aligned, reducing the risk that the model would face a very different pattern at prediction time. No material shifts or data quality concerns emerged so we proceeded without heavy feature pruning.</p>
+  <p><strong>Train vs Test Dataset Comparison:</strong> We also overlaid training and test distributions to confirm they were broadly aligned, reducing the risk that the model would face a very different pattern at prediction time. No material shifts or data quality concerns emerged so we proceeded without heavy feature pruning.</p>
         <figure>
           <img src="img/train_vs_test_dataset.png" alt="Comparison of key feature distributions between train and test sets" style="max-width:100%;height:auto;" />
           <figcaption>Figure: Alignment between Train and Test Distributions</figcaption>
