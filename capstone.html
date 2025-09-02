@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark light" />
+  <title>Capstone Report: Predict Podcast Listening Time</title>
+  <meta name="description" content="Capstone Executive Summary and Report Skeleton" />
+  <style>
+    /* Theme variables: Dracula (default) + Light (original) */
+  :root, :root[data-theme='dark'] {
+      --page-max: 760px;
+      --bg: #282a36;              /* page background */
+      --page-bg: #1e1f29;          /* content card background */
+      --page-border: #44475a;
+      --text: #f8f8f2;             /* primary text */
+      --muted: #6272a4;            /* secondary text */
+      --rule: #44475a;             /* separators */
+      --accent: #bd93f9;           /* accent (purple) */
+      --link: #bd93f9;
+      --link-hover: #ff79c6;
+      --code-bg: #303342;
+      --code-border: #44475a;
+      --table-stripe: #262736;
+      --table-hover: #303241;
+      --table-head-border: #44475a;
+      --table-last-border: #44475a;
+      --btn-bg: #44475a;
+      --btn-text: #f8f8f2;
+      --btn-bg-alt: #e2e3e7;
+      --serif: Georgia, "Times New Roman", Times, serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+    :root[data-theme='light'] {
+      --page-max: 760px;           
+      --text: #1f1f22;
+      --muted: #5a5a63;
+      --rule: #cfcfd4;
+      --accent: #20242b;           
+      --bg: #f2f3f5;
+      --page-bg: #ffffff;
+      --page-border: #e2e3e7;
+      --link: #20242b;
+      --link-hover: #000000;
+      --code-bg: #f6f6f9;
+      --code-border: #e2e3e7;
+      --table-stripe: #fafbfc;
+      --table-hover: #f0f4ff;
+      --table-head-border: #bbbbbb;
+      --table-last-border: #d4d4d9;
+      --btn-bg: #20242b;
+      --btn-text: #ffffff;
+      --btn-bg-alt: #44475a; /* not really used in light */
+      --serif: Georgia, "Times New Roman", Times, serif;
+      --sans: "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* Global / page baseline */
+  html, body { margin:0; padding:0; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; transition: background .35s ease, color .3s ease; }
+    body { font-family: var(--serif); font-size:16px; line-height:1.54; }
+    .page {
+      max-width: var(--page-max);
+      margin: 2.4rem auto 3.2rem;
+      background:var(--page-bg);
+      padding: 2.6rem 3rem 2.8rem;
+      border: 1px solid var(--page-border);
+      box-shadow: 0 3px 18px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.4);
+      transition: background .35s ease, border-color .35s ease, box-shadow .35s ease;
+    }
+
+    /* Title block */
+    header.paper-header { text-align:center; margin-bottom:2.1rem; padding-bottom:1.4rem; border-bottom:1px solid var(--rule); }
+    .paper-title { font-size:2.05rem; font-weight:700; letter-spacing:.5px; margin:.15rem 0 .55rem; line-height:1.18; }
+    .paper-subtitle { font-family:var(--sans); font-variant-caps:small-caps; color:var(--muted); letter-spacing:.7px; margin:.25rem 0; font-size:0.78rem; font-weight:500; }
+
+    /* Section numbering via CSS counters */
+    main { counter-reset: section; }
+    main section { margin:2.1rem 0 2.3rem; }
+    h2.section-title { position:relative; margin:0 0 .85rem; font-size:1.18rem; font-weight:700; font-family:var(--sans); letter-spacing:.6px; text-transform:uppercase; padding-left:2.4rem; line-height:1.25; }
+  h2.section-title:before { counter-increment:section; content: counter(section) "."; position:absolute; left:0; top:0; font-weight:600; color:var(--accent); }
+  h2.section-title:after { content:""; position:absolute; left:0; bottom:-6px; width:100%; height:1px; background:linear-gradient(90deg,var(--rule),rgba(255,255,255,0)); }
+
+    /* Paragraph styling: academic feel with first-line indent except after headings or lists */
+  p { margin:.55rem 0 .55rem; text-align:justify; hyphens:auto; line-height:1.55; text-indent:0; }
+    p strong { font-weight:600; }
+    ul { margin:.5rem 0 .9rem 2.1rem; padding:0; }
+    ul li { margin:.35rem 0; padding:0; }
+  ul.next-steps { list-style:disc; margin:.5rem 0 1.1rem 1.6rem; }
+  ul.next-steps li { margin:.28rem 0; }
+  code { font-family: "SFMono-Regular", Menlo, Consolas, monospace; font-size:0.85em; background:var(--code-bg); padding:2px 6px; border:1px solid var(--code-border); border-radius:4px; transition: background .35s ease, color .35s ease; }
+
+    /* Table: booktabs-inspired */
+  table { border-collapse:collapse; margin:.4rem 0 1.2rem; width:100%; }
+  table thead tr { border-bottom:2px solid var(--table-head-border); }
+  table tbody tr:last-child { border-top:1px solid var(--table-last-border); }
+  table th, table td { font-size:0.83rem; line-height:1.35; }
+  table th { font-weight:600; font-family:var(--sans); }
+  table td, table th { padding:6px 7px; }
+  table tbody tr:nth-child(even) { background:var(--table-stripe); }
+  table tbody tr:hover { background:var(--table-hover); }
+
+    /* Figures & captions */
+    figure, .table-wrap { display:block; margin:1.1rem auto; text-align:center; }
+  figcaption, .tbl-caption { font-size:.78rem; color:var(--muted); margin-top:.45rem; font-style:italic; letter-spacing:.2px; }
+
+    /* Horizontal rule / footer separator */
+    .rule { border-top:1px solid var(--rule); margin:2.6rem 0 1.4rem; }
+  .paper-footer { text-align:center; font-size:.72rem; color:var(--muted); font-family:var(--sans); letter-spacing:.3px; }
+  .paper-footer .meta { margin:.2rem 0; }
+  .paper-footer a { color:var(--link); text-decoration:none; border-bottom:1px dotted var(--link); }
+  .paper-footer a:hover { color:var(--link-hover); border-bottom:1px solid var(--link-hover); }
+  a { color:var(--link); transition: color .25s ease; }
+  a:hover { color:var(--link-hover); }
+  a:focus { outline:2px solid var(--accent); outline-offset:2px; }
+  #theme-toggle { position:fixed; top:10px; right:10px; background:var(--btn-bg); color:var(--btn-text); border:1px solid var(--rule); font-size:.65rem; padding:6px 9px; cursor:pointer; border-radius:4px; font-family:var(--sans); letter-spacing:.5px; text-transform:uppercase; opacity:0.9; display:inline-flex; align-items:center; justify-content:center; line-height:1; }
+  #theme-toggle:hover { opacity:1; }
+  #theme-toggle:focus { outline:2px solid var(--accent); outline-offset:2px; }
+  #notebook-link { position:fixed; top:10px; right:88px; background:var(--btn-bg); color:var(--btn-text); border:1px solid var(--rule); font-size:.65rem; padding:6px 9px; cursor:pointer; border-radius:4px; font-family:var(--sans); letter-spacing:.5px; text-transform:uppercase; opacity:0.9; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; line-height:1; }
+  #notebook-link:hover { opacity:1; }
+  #notebook-link:focus { outline:2px solid var(--accent); outline-offset:2px; }
+
+    /* Print adjustments */
+    @media print {
+      body { background:#fff; }
+      .page { box-shadow:none; border:none; padding:1.6cm 1.8cm 1.8cm; margin:0; }
+      h2.section-title { page-break-after:avoid; }
+      table { page-break-inside:auto; }
+      tr { page-break-inside:avoid; page-break-after:auto; }
+      p { orphans:3; widows:3; }
+      a[href]:after { content:""; }
+    }
+  </style>
+</head>
+<body>
+  <a id="notebook-link" href="podcast_notebook.html" aria-label="Open notebook view">Notebook</a>
+  <button id="theme-toggle" type="button" aria-label="Toggle colour theme">LIGHT</button>
+  <div class="page">
+    <header class="paper-header">
+        <img src="img/imperial_logo.svg" alt="Imperial Business School Logo" style="height:60px; margin-bottom:12px;" />
+      <h1 class="paper-title">Predict Podcast Listening Time</h1>
+      <div class="paper-subtitle">Capstone Executive Summary and Report</div>
+      <div class="paper-subtitle">by Aishwarya Singh</div>
+    </header>
+
+    <main>
+      <!-- 1. Executive Summary -->
+      <section id="executive-summary">
+        <h2 class="section-title">Executive Summary</h2>
+  <p>This project advances the prediction of podcast listening time to improve episode ranking, advertising pacing, and content investment decisions. Using machine learning, we reduced the average prediction error from 27.09 minutes to 13.11 minutes, representing a 51.6% improvement with interpretable models built in scikit-learn. Validation R2 reached 76.6%, further supporting the accuracy of the approach.</p>
+        <p>The analysis included robust data cleaning, careful handling of missing values, and comparison of several models. The Histogram Gradient Boosting model provided the most accurate and efficient results. The Decision Tree model performed closely, while the Random Forest model was less effective under the tested parameters.</p>
+        <p>Deployment of the Histogram Gradient Boosting model is recommended for the initial rollout, with ongoing monitoring of prediction accuracy. Further improvements can be achieved by enriching the feature set and applying cross-validation. This approach delivers measurable business impact, operational simplicity, and a clear foundation for future enhancements.</p>
+      </section>
+
+      <!-- 2. Introduction -->
+      <section id="introduction">
+        <h2 class="section-title">Introduction</h2>
+        <p>Accurately predicting how long users will listen to podcast episodes is essential for streaming and audio platforms aiming to optimise content recommendations, allocate advertising inventory effectively, and guide content investment decisions. Listening time serves as a direct indicator of user engagement and has a measurable impact on monetisation opportunities.</p>
+  <p>The training data contains 750,000 rows and is a synthetic derivative of the original podcast listening time dataset. This ensures a robust foundation for model development while allowing for meaningful comparisons and validation.</p>
+        <p>This capstone project set out to develop a transparent and reproducible machine learning pipeline that delivers meaningful improvements over a simple average-based prediction. The focus was on using interpretable models available in scikit-learn, ensuring that the solution remains accessible, explainable, and aligned with best practices.</p>
+      </section>
+
+      <!-- 3. Methodology -->
+      <section id="methodology">
+        <h2 class="section-title">Methodology</h2>
+        <p><strong>Data Source:</strong> The dataset for this project was sourced from the Kaggle Playground Series competition “<a href="https://www.kaggle.com/competitions/playground-series-s5e4/" target="_blank" rel="noopener">Predict Podcast Listening Time</a>.” The data consists of synthetic derivatives of original podcast engagement records, designed to closely resemble real world listening patterns while ensuring privacy and fairness in model evaluation.</p>
+        <div style="margin:1.1rem 0 0.2rem;">
+          <figure style="margin:0 0 1.2rem; text-align:center;">
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--table-head-border); border-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.25); padding:4px 4px 2px; background:var(--page-bg);">
+              <table style="border-collapse:collapse; font-size:0.62rem; min-width:1000px; width:max-content; margin:0;">
+              <thead>
+                <tr style="background:var(--table-stripe); border-bottom:1px solid var(--table-head-border); text-align:right;">
+                  <th style="padding:3px 6px;">id</th>
+                  <th style="padding:3px 6px;">Podcast_Name</th>
+                  <th style="padding:3px 6px;">Episode_Title</th>
+                  <th style="padding:3px 6px;">Episode_Length_minutes</th>
+                  <th style="padding:3px 6px;">Genre</th>
+                  <th style="padding:3px 6px;">Host_Popularity_percentage</th>
+                  <th style="padding:3px 6px;">Publication_Day</th>
+                  <th style="padding:3px 6px;">Publication_Time</th>
+                  <th style="padding:3px 6px;">Guest_Popularity_percentage</th>
+                  <th style="padding:3px 6px;">Number_of_Ads</th>
+                  <th style="padding:3px 6px;">Episode_Sentiment</th>
+                  <th style="padding:3px 6px;">Listening_Time_minutes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding:3px 6px;">0</td><td style="padding:3px 6px;">Mystery Matters</td><td style="padding:3px 6px;">Episode 98</td><td style="padding:3px 6px;">NaN</td><td style="padding:3px 6px;">True Crime</td><td style="padding:3px 6px;">74.81</td><td style="padding:3px 6px;">Thursday</td><td style="padding:3px 6px;">Night</td><td style="padding:3px 6px;">NaN</td><td style="padding:3px 6px;">0.0</td><td style="padding:3px 6px;">Positive</td><td style="padding:3px 6px;">31.41998</td></tr>
+                <tr><td style="padding:3px 6px;">1</td><td style="padding:3px 6px;">Joke Junction</td><td style="padding:3px 6px;">Episode 26</td><td style="padding:3px 6px;">119.80</td><td style="padding:3px 6px;">Comedy</td><td style="padding:3px 6px;">66.95</td><td style="padding:3px 6px;">Saturday</td><td style="padding:3px 6px;">Afternoon</td><td style="padding:3px 6px;">75.95</td><td style="padding:3px 6px;">2.0</td><td style="padding:3px 6px;">Negative</td><td style="padding:3px 6px;">88.01241</td></tr>
+                <tr><td style="padding:3px 6px;">2</td><td style="padding:3px 6px;">Study Sessions</td><td style="padding:3px 6px;">Episode 16</td><td style="padding:3px 6px;">73.90</td><td style="padding:3px 6px;">Education</td><td style="padding:3px 6px;">69.97</td><td style="padding:3px 6px;">Tuesday</td><td style="padding:3px 6px;">Evening</td><td style="padding:3px 6px;">8.97</td><td style="padding:3px 6px;">0.0</td><td style="padding:3px 6px;">Negative</td><td style="padding:3px 6px;">44.92531</td></tr>
+                <tr><td style="padding:3px 6px;">3</td><td style="padding:3px 6px;">Digital Digest</td><td style="padding:3px 6px;">Episode 45</td><td style="padding:3px 6px;">67.17</td><td style="padding:3px 6px;">Technology</td><td style="padding:3px 6px;">57.22</td><td style="padding:3px 6px;">Monday</td><td style="padding:3px 6px;">Morning</td><td style="padding:3px 6px;">78.70</td><td style="padding:3px 6px;">2.0</td><td style="padding:3px 6px;">Positive</td><td style="padding:3px 6px;">46.27824</td></tr>
+                <tr><td style="padding:3px 6px;">4</td><td style="padding:3px 6px;">Mind &amp; Body</td><td style="padding:3px 6px;">Episode 86</td><td style="padding:3px 6px;">110.51</td><td style="padding:3px 6px;">Health</td><td style="padding:3px 6px;">80.07</td><td style="padding:3px 6px;">Monday</td><td style="padding:3px 6px;">Afternoon</td><td style="padding:3px 6px;">58.68</td><td style="padding:3px 6px;">3.0</td><td style="padding:3px 6px;">Neutral</td><td style="padding:3px 6px;">75.61031</td></tr>
+              </tbody>
+              </table>
+            </div>
+            <figcaption style="margin-top:.45rem; font-size:.63rem;">Training Data Preview</figcaption>
+          </figure>
+          <figure style="margin:0; text-align:center;">
+            <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; border:1px solid var(--table-head-border); border-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.25); padding:4px 4px 2px; background:var(--page-bg);">
+              <table style="border-collapse:collapse; font-size:0.62rem; min-width:900px; width:max-content; margin:0;">
+              <thead>
+                <tr style="background:var(--table-stripe); border-bottom:1px solid var(--table-head-border); text-align:right;">
+                  <th style="padding:3px 6px;">id</th>
+                  <th style="padding:3px 6px;">Podcast_Name</th>
+                  <th style="padding:3px 6px;">Episode_Title</th>
+                  <th style="padding:3px 6px;">Episode_Length_minutes</th>
+                  <th style="padding:3px 6px;">Genre</th>
+                  <th style="padding:3px 6px;">Host_Popularity_percentage</th>
+                  <th style="padding:3px 6px;">Publication_Day</th>
+                  <th style="padding:3px 6px;">Publication_Time</th>
+                  <th style="padding:3px 6px;">Guest_Popularity_percentage</th>
+                  <th style="padding:3px 6px;">Number_of_Ads</th>
+                  <th style="padding:3px 6px;">Episode_Sentiment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td style="padding:3px 6px;">750000</td><td style="padding:3px 6px;">Educational Nuggets</td><td style="padding:3px 6px;">Episode 73</td><td style="padding:3px 6px;">78.96</td><td style="padding:3px 6px;">Education</td><td style="padding:3px 6px;">38.11</td><td style="padding:3px 6px;">Saturday</td><td style="padding:3px 6px;">Evening</td><td style="padding:3px 6px;">53.33</td><td style="padding:3px 6px;">1.0</td><td style="padding:3px 6px;">Neutral</td></tr>
+                <tr><td style="padding:3px 6px;">750001</td><td style="padding:3px 6px;">Sound Waves</td><td style="padding:3px 6px;">Episode 23</td><td style="padding:3px 6px;">27.87</td><td style="padding:3px 6px;">Music</td><td style="padding:3px 6px;">71.29</td><td style="padding:3px 6px;">Sunday</td><td style="padding:3px 6px;">Morning</td><td style="padding:3px 6px;">NaN</td><td style="padding:3px 6px;">0.0</td><td style="padding:3px 6px;">Neutral</td></tr>
+                <tr><td style="padding:3px 6px;">750002</td><td style="padding:3px 6px;">Joke Junction</td><td style="padding:3px 6px;">Episode 11</td><td style="padding:3px 6px;">69.10</td><td style="padding:3px 6px;">Comedy</td><td style="padding:3px 6px;">67.89</td><td style="padding:3px 6px;">Friday</td><td style="padding:3px 6px;">Evening</td><td style="padding:3px 6px;">97.51</td><td style="padding:3px 6px;">0.0</td><td style="padding:3px 6px;">Positive</td></tr>
+                <tr><td style="padding:3px 6px;">750003</td><td style="padding:3px 6px;">Comedy Corner</td><td style="padding:3px 6px;">Episode 73</td><td style="padding:3px 6px;">115.39</td><td style="padding:3px 6px;">Comedy</td><td style="padding:3px 6px;">23.40</td><td style="padding:3px 6px;">Sunday</td><td style="padding:3px 6px;">Morning</td><td style="padding:3px 6px;">51.75</td><td style="padding:3px 6px;">2.0</td><td style="padding:3px 6px;">Positive</td></tr>
+                <tr><td style="padding:3px 6px;">750004</td><td style="padding:3px 6px;">Life Lessons</td><td style="padding:3px 6px;">Episode 50</td><td style="padding:3px 6px;">72.32</td><td style="padding:3px 6px;">Lifestyle</td><td style="padding:3px 6px;">58.10</td><td style="padding:3px 6px;">Wednesday</td><td style="padding:3px 6px;">Morning</td><td style="padding:3px 6px;">11.30</td><td style="padding:3px 6px;">2.0</td><td style="padding:3px 6px;">Neutral</td></tr>
+              </tbody>
+              </table>
+            </div>
+            <figcaption style="margin-top:.45rem; font-size:.63rem;">Test Data Preview</figcaption>
+          </figure>
+        </div>
+  <p>Three files were provided: a training set with the target variable <code>Listening_Time_minutes</code>, a test set without the target, and a sample submission template. The training data contains 750,000 rows and includes episode details, popularity metrics, genre, publication timing, sentiment and advertisement counts. The test set contains 250,000 rows but without the target variable. Only the training set was used for model selection, with the test set reserved for final inference and submission.</p>
+        <p><strong>Target & Metric:</strong> The target variable for prediction is <code>Listening_Time_minutes</code> which measures how long a user listens to a podcast episode. Model performance was evaluated using Root Mean Squared Error, a metric that quantifies the average prediction error in minutes and penalises larger mistakes more heavily. The baseline for comparison was the mean listening time from the training set.</p>
+        <p><strong>Modelling Approach:</strong> The modelling process advanced in clear, purposeful steps from simple to more sophisticated methods, each chosen for interpretability and efficiency. This staged approach ensured that extra complexity was only introduced when it provided a measurable reduction in error and a clear business benefit:</p>
+        <ul style="margin:0.6rem 0 1.1rem 1.6rem;">
+          <li><strong>Baseline Mean Predictor:</strong> Served as the control, highlighting the error from a basic approach and setting a clear benchmark for improvement.</li>
+          <li><strong>Decision Tree:</strong> Enabled splits on important feature thresholds such as episode length or popularity. Each split represents a straightforward decision rule, making the model easy to interpret.</li>
+          <li><strong>Random Forest:</strong> Combined many shallow trees to reduce random noise and produce more stable predictions. This approach improved consistency while keeping runtime manageable.</li>
+          <li><strong>Histogram Gradient Boosting:</strong> Built trees sequentially, each one focusing on correcting the errors of the previous. This method achieved strong accuracy quickly, handled mixed feature types well, and remained efficient for deployment.</li>
+        </ul>
+      </section>
+
+      <!-- 4. Exploratory Data Analysis -->
+      <section id="eda">
+        <h2 class="section-title">Exploratory Data Analysis</h2>
+        <p><strong>Preprocessing:</strong> The raw training file contained a mix of numbers such as counts and durations and categories such as genre, publication day and sentiment labels. We removed the identifier column since it does not help prediction, filled missing numeric values with the middle value of the distribution, and filled missing categorical values with the most common entry so that no rows were lost. Categorical fields were converted into model friendly indicator columns while keeping the structure consistent between training and validation splits. Because all models were tree based we did not need to standardise or scale values which keeps the pipeline simpler and faster to run.</p>
+        <p><strong>Exploratory Analysis:</strong></p>
+        <p><em>Listening Time Distribution:</em> We reviewed basic distributions to check for extreme outliers, compared average listening time across key categories such as genre, publication day and sentiment, and inspected simple relationships for the most influential numeric fields.</p>
+        <figure>
+          <img src="img/listening_time_distribution.png" alt="Distribution of listening time in minutes" style="max-width:100%;height:auto;" />
+          <figcaption>Figure: Listening Time Distribution</figcaption>
+        </figure>
+        <p><em>Feature Collinearity:</em> We inspected simple relationships for the most influential numeric fields.</p>
+        <figure>
+          <img src="img/listening_time_scatterplot.png" alt="Scatterplot of key numeric predictors versus listening time" style="max-width:100%;height:auto;" />
+          <figcaption>Figure: Listening Time vs Episode Length Scatterplot</figcaption>
+        </figure>
+        <figure>
+          <img src="img/listening_time_heatmap.png" alt="Correlation heatmap of engineered and raw numeric features" style="max-width:100%;height:auto;" />
+          <figcaption>Figure: Feature Correlation Heatmap</figcaption>
+        </figure>
+        <p><em>Train vs Test Dataset Comparison:</em> We also overlaid training and test distributions to confirm they were broadly aligned, reducing the risk that the model would face a very different pattern at prediction time. No material shifts or data quality concerns emerged so we proceeded without heavy feature pruning.</p>
+        <figure>
+          <img src="img/train_vs_test_dataset.png" alt="Comparison of key feature distributions between train and test sets" style="max-width:100%;height:auto;" />
+          <figcaption>Figure: Alignment between Train and Test Distributions</figcaption>
+        </figure>
+      </section>
+
+      <!-- 5. Training the Models -->
+      <section id="modelling-results">
+        <h2 class="section-title">Training the Models</h2>
+  <p><strong>Baseline:</strong> A simple mean predictor, that always forecasts the average listening time, established an anchor error of 27.09 minutes RMSE. All subsequent models are judged against this reference both in absolute minutes reduced and percentage improvement.</p>
+  <p><strong>Decision Tree:</strong> A single depth controlled tree captured key non linear thresholds such as episode length and popularity splits and reduced RMSE to 13.20 minutes, a drop of 13.89 minutes or 51.3% versus the baseline. This large first step showed that most reducible variance could be explained with a small set of hierarchical rules.</p>
+  <p><strong>Random Forest:</strong> An ensemble of shallow trees produced an RMSE of 16.65 minutes. This is still 10.44 minutes or 38.6% better than the baseline, but 3.45 minutes worse than the single Decision Tree which achieved 13.20. Conservative runtime focused parameters smoothed important sharp splits and weakened accuracy relative to the best tree.</p>
+  <p><strong>Histogram Gradient Boosting:</strong> Sequential boosting refined residual errors and achieved the best RMSE at 13.11 minutes, 13.98 minutes or 51.6% lower than baseline, edging the Decision Tree by 0.09 minutes and outperforming the Random Forest by 3.54 minutes. The marginal gain over the tree indicates diminishing returns yet confirms that targeted residual correction adds a small further improvement without material complexity overhead.</p>
+        <p><strong>Model Comparison (Validation RMSE):</strong></p>
+        <table style="width:100%; border-collapse:collapse; font-size:0.9rem;">
+          <thead>
+            <tr style="text-align:left; border-bottom:1px solid #ccc;">
+              <th style="padding:4px 6px;">Model</th>
+              <th style="padding:4px 6px;">RMSE (min)</th>
+              <th style="padding:4px 6px;">Δ vs Baseline</th>
+              <th style="padding:4px 6px;">% Improvement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:4px 6px;">Baseline mean</td><td style="padding:4px 6px;">27.09</td><td style="padding:4px 6px;">-</td><td style="padding:4px 6px;">-</td></tr>
+            <tr><td style="padding:4px 6px;">Decision Tree</td><td style="padding:4px 6px;">13.20</td><td style="padding:4px 6px;">-13.89</td><td style="padding:4px 6px;">51.3%</td></tr>
+            <tr><td style="padding:4px 6px;">Random Forest</td><td style="padding:4px 6px;">16.65</td><td style="padding:4px 6px;">-10.44</td><td style="padding:4px 6px;">38.6%</td></tr>
+            <tr><td style="padding:4px 6px;">HistGradientBoosting</td><td style="padding:4px 6px;">13.11</td><td style="padding:4px 6px;">-13.98</td><td style="padding:4px 6px;">51.6%</td></tr>
+          </tbody>
+        </table>
+        <figure>
+          <img src="img/Model_RMSE_comparison.png" alt="Bar chart comparing model RMSE values" style="max-width:100%;height:auto;" />
+          <figcaption>Figure: Validation RMSE Comparison</figcaption>
+        </figure>
+        <p><strong>Interpretation:</strong> Both the Decision Tree and Histogram Gradient Boosting halved the baseline error. HistGB narrowly led with an advantage of about 0.09 minutes, suggesting most reducible variance was captured by depth controlled tree structure rather than extensive ensembling. The Random Forest underperformed relative to expectations, likely due to conservative depth and leaf constraints chosen for runtime reasons.</p>
+      </section>
+
+      <!-- 6. Generating Test Predictions -->
+      <section id="testing-model">
+        <h2 class="section-title">Generating Test Predictions</h2>
+  <p>Following model validation, the Histogram Gradient Boosting approach was selected for its combination of accuracy and efficient processing. To maximise predictive power, the model was retrained using the entire labelled dataset, ensuring that all available patterns were captured before generating final predictions.</p>
+  <p>This fully trained model was then applied to the separate test set of 250,000 episodes, producing individual listening time estimates for each row. These predictions were compiled into the required submission format, including the unique identifier and the predicted listening time in minutes.</p>
+  <p>By automating this final step and avoiding manual adjustments, the process remains fully reproducible and transparent. The resulting predictions are ready for direct use in episode ranking, advertising pacing, and further business evaluation. Future improvements will build upon this established baseline, supporting ongoing optimisation.</p>
+        <figure style="text-align:center;">
+          <table style="margin:0 auto; border-collapse:collapse; font-size:0.78rem; width:auto; min-width:260px; box-shadow:0 1px 4px rgba(0,0,0,0.25);">
+            <thead>
+              <tr style="text-align:right; border-bottom:1px solid var(--table-head-border); background:var(--table-stripe);">
+                <th style="padding:3px 8px; font-weight:600; font-family:var(--sans);">id</th>
+                <th style="padding:3px 8px; font-weight:600; font-family:var(--sans);">Listening_Time_minutes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:3px 8px;">750000</td><td style="padding:3px 8px;">56.10</td></tr>
+              <tr><td style="padding:3px 8px;">750001</td><td style="padding:3px 8px;">18.00</td></tr>
+              <tr><td style="padding:3px 8px;">750002</td><td style="padding:3px 8px;">49.26</td></tr>
+              <tr><td style="padding:3px 8px;">750003</td><td style="padding:3px 8px;">79.93</td></tr>
+              <tr><td style="padding:3px 8px;">750004</td><td style="padding:3px 8px;">48.86</td></tr>
+            </tbody>
+          </table>
+          <figcaption style="margin-top:.45rem;">Submission File Preview</figcaption>
+        </figure>
+      </section>
+
+  <!-- 7. Conclusion -->
+      <section id="conclusion">
+        <h2 class="section-title">Conclusion</h2>
+  <p>This project successfully delivered a transparent and reproducible machine learning pipeline that substantially improved the accuracy of podcast listening time predictions. By reducing the average error from 27.09 minutes to 13.11 minutes, the solution demonstrates clear value for optimising episode ranking, advertising strategies, and content investment decisions.</p>
+  <p>The recommended Histogram Gradient Boosting model offers a strong balance between predictive accuracy and operational simplicity, making it well-suited for deployment in a production environment. Its performance, coupled with efficient training requirements, ensures the approach remains practical and scalable.</p>
+  <p>Key drivers of predictive power were episode length, popularity measures, and a subset of sentiment and genre indicators. Moderate correlation among numeric features did not inflate variance, evidenced by the narrow gap between the single tree and boosted model errors which indicates minimal overfitting under the chosen constraints.</p>
+  <p>Looking ahead, further gains can be realised by implementing k-fold cross-validation for more robust performance reporting, exploring targeted feature engineering, and monitoring for prediction drift post-deployment. These steps will help maintain accuracy and adapt the model as new data becomes available.</p>
+  <p>Overall, the project achieves its objectives of clarity and measurable improvement, providing a solid foundation for ongoing experimentation and future enhancements.</p>
+      </section>
+
+      <div class="rule"></div>
+      <div class="paper-footer">
+  <div class="meta"><strong>Predict Podcast Listening Time</strong> | Capstone Report</div>
+        <div class="meta">Author: Aishwarya Singh &middot; Imperial College Business School</div>
+        <div class="meta">Version 1.0 &middot; Generated on <span id="build-date"></span></div>
+        <div class="meta">Repository: <a href="https://github.com/aishwaryasingh51/DataAnalytics" target="_blank" rel="noopener">GitHub/DataAnalytics</a></div>
+      </div>
+      <script>
+        document.getElementById('build-date').textContent = new Date().toISOString().slice(0,10);
+        (function(){
+          const html = document.documentElement;
+            const btn = document.getElementById('theme-toggle');
+            function update(){
+              const t = html.getAttribute('data-theme');
+              btn.textContent = t === 'dark' ? 'LIGHT' : 'DARK';
+            }
+            btn.addEventListener('click', ()=>{
+              const current = html.getAttribute('data-theme');
+              html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+              update();
+            });
+            update();
+        })();
+      </script>
+    </main>
+  </div>
+</body>
+</html>
