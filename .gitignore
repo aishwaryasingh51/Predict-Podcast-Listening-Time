@@ -1,0 +1,20 @@
+# OS / editor
+.DS_Store
+*.swp
+*.code-workspace
+.vscode/
+
+# Python envs
+.venv/
+.env/
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data artifacts (keep original CSVs tracked)
+*.tmp
+
+# Model artifacts (add if generated later)
+model.joblib
